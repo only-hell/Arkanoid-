@@ -1,0 +1,30 @@
+                b.draw()
+
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if n != 10:
+                if event.button == 1:
+                    n += 1
+                    for i in range(3):
+                        for row in all_rects:
+                            for item in row:
+                                rect, color = item
+                                if rect.collidepoint(randint(0, 420), 58 * n):
+                                    if color == BLACK:
+                                        item[1] = (randint(0, 255), randint(0, 255), randint(0, 255))
+        if n == 10:
+            game_over = True
+    frame.fill(BLACK)
+    for row in all_rects:
+        for item in row:
+            rect, color = item
+            pygame.draw.rect(frame, color, rect)
+
+    pygame.display.flip()
+message("You lost! Game over.", red)
+pygame.display.update()
+time.sleep(3)
+
+
+#     pygame.display.flip()
+#     clock.tick(fps)
+# pygame.quit()
