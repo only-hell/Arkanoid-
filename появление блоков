@@ -1,0 +1,68 @@
+import pygame
+import sys
+import time
+from random import randint
+
+SCREEN_WIDTH = 420
+SCREEN_HEIGHT = 600
+BLOCK_SIZE = 60
+BLACK = (0, 0, 0)
+red = (255, 0, 0)
+game_over = False
+pygame.font.init()
+font_style = pygame.font.SysFont(None, 50)
+
+
+pygame.init()
+dis = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_WIDTH))
+
+
+def message(msg, color):
+    mesg = font_style.render(msg, True, color)
+    dis.blit(mesg, [SCREEN_WIDTH / 8, SCREEN_HEIGHT / 2 ])
+
+
+frame = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+pygame.display.set_caption("Появление блоков после каждого хода")
+
+# create list with all rects
+all_rects = []
+for y in range(0, SCREEN_HEIGHT, BLOCK_SIZE):
+    row = []
+    for x in range(0, SCREEN_WIDTH, BLOCK_SIZE):
+        rect = pygame.Rect(x, y, BLOCK_SIZE - 1, BLOCK_SIZE - 1)
+        row.append([rect, BLACK])
+    all_rects.append(row)
+n = 0
+while not game_over:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+            game_over = True
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if n != 10:
+                if event.button == 1:
+                    n += 1
+                    for i in range(3):
+                        for row in all_rects:
+                            for item in row:
+                                rect, color = item
+                                if rect.collidepoint(randint(0, 420), 58 * n):
+                                    if color == BLACK:
+                                        item[1] = (randint(0, 255), randint(0, 255), randint(0, 255))
+        if n == 10:
+            game_over = True
+
+    # draw all in every loop
+
+    frame.fill(BLACK)
+    for row in all_rects:
+        for item in row:
+            rect, color = item
+            pygame.draw.rect(frame, color, rect)
+
+    pygame.display.flip()
+message("You lost! Game over.", red)
+pygame.display.update()
+time.sleep(3)
