@@ -58,7 +58,7 @@ pygame.time.set_timer(move, 2)
 balls = []
 
 pygame.init()
-arrow = pygame.image.load("data/arrow.png")
+arrow = pygame.image.load("data/arrow1.png")
 r = arrow.get_rect()
 pygame.mouse.set_visible(False)
 
