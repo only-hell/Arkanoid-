@@ -67,17 +67,14 @@ while running:
         #         self.dx = 0
 
         elif event.type == pygame.MOUSEMOTION:
-            screen.fill(pygame.Color("black"))
             r.topleft = event.pos
-            if pygame.mouse.get_focused():
-                screen.blit(arrow, r)
+
 
         elif event.type == pygame.MOUSEBUTTONUP:
             screen.fill(pygame.Color('black'))
             a = [event.pos[0], 500]
             balls.append(Ball(*a, 1))
-            for b in balls:
-                b.draw()
+
 
         elif balls and event.type == move:
             screen.fill(pygame.Color('black'))
@@ -85,6 +82,11 @@ while running:
                 b.move(width, height)
             for b in balls:
                 b.draw()
+
+    screen.fill(pygame.Color("black"))
+    for b in balls:
+        b.draw()
+    screen.blit(arrow, r)
     pygame.display.flip()
     clock.tick(fps)
 pygame.quit()
