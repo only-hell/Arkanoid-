@@ -42,6 +42,7 @@ sc.blit(background, (0, 0))
 pg.display.update()
 x = 0
 
+
 class Ball:
     def __init__(self, x, y, v):
         self.x = 0
@@ -133,22 +134,23 @@ while not game_over:
         if n == 10:
             game_over = True
         if x < 400:
-            x += 2
+            x += 0.1
         else:
             x = 0
     screen.fill(pygame.Color("black"))
 
     for b in balls:
         b.draw()
-    screen.blit(arrow, r)
 
     for row in all_rects:
         for item in row:
             rect, color = item
             pygame.draw.rect(sc, color, rect)
     pygame.display.flip()
-
+    print(r)
     background.blit(sc, (x, 0))
+    sc.blit(arrow, (0, 0))
+    # sc.blit(arrow, r)
     sc.blit(hero, (x, 0))
     pg.display.update()
     pg.time.delay(30)
