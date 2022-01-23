@@ -1,0 +1,149 @@
+import pygame
+import sys
+import time
+from random import randint
+
+BLOCK_SIZE = 60
+BLACK = (0, 0, 0)
+red = (255, 0, 0)
+game_over = False
+pygame.font.init()
+font_style = pygame.font.SysFont(None, 50)
+balls = []
+col = 0
+
+
+class Ball:
+    def __init__(self, x, y, v):
+        self.x = 0
+        self.y = 0
+        self.dy = -v
+        self.col = 0
+        # dх отвечает за направление движение вдоль оси ох
+        # нужно сделать 3 варианта dx = v/ -v/ 0
+        # то есть движение вправо влево и  вертикально вверх
+        self.dx = v
+
+    def move(self, w, h):
+        self.x += self.dx
+        self.y += self.dy
+
+        if self.x < 0:
+            self.dx *= -1
+            self.x *= -1
+        if self.x > w:
+            self.dx *= -1
+            self.x = w - self.x % w
+        if self.y < 0:
+            self.dy *= -1
+            self.y *= -1
+        if self.y > h:
+            self.dy *= -1
+            self.y = h - self.y % h
+        if self.y == h:
+            self.dy = 0
+            self.dx = 0
+            self.y = h + 10
+            self.x = 300
+            self.col = 1
+        print(self.col)
+        return self.col
+
+
+    def draw(self):
+        pygame.draw.circle(screen, pygame.Color('white'),
+                           (self.x, self.y), 10, 0)
+
+
+size = width, height = 420, 600
+fps = 100
+screen = pygame.display.set_mode(size)
+clock = pygame.time.Clock()
+pygame.display.set_caption('Шарики')
+running = True
+move = pygame.USEREVENT
+pygame.time.set_timer(move, 2)
+
+pygame.init()
+arrow = pygame.image.load("data/arrow.png")
+r = arrow.get_rect()
+pygame.mouse.set_visible(False)
+
+dis = pygame.display.set_mode((width, width))
+
+
+def message(msg, color):
+    mesg = font_style.render(msg, True, color)
+    dis.blit(mesg, [width / 8, height / 2])
+
+
+frame = pygame.display.set_mode((width, height))
+pygame.display.set_caption("Появление блоков после каждого хода")
+all_rects = []
+for i in range(0, height, BLOCK_SIZE):
+    row = []
+    for j in range(0, width, BLOCK_SIZE):
+        rect = pygame.Rect(j, i, BLOCK_SIZE - 1, BLOCK_SIZE - 1)
+        row.append([rect, BLACK])
+    all_rects.append(row)
+n = 0
+while not game_over:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+            game_over = True
+
+        # if event.type == pygame.KEYDOWN:
+        #     if event.key == pygame.K_LEFT:
+        #         self.dx = -1
+        #     elif event.key == pygame.K_RIGHT:
+        #         self.dx = 1
+        #     elif event.key == pygame.K_UP or event.key == pygame.K_DOWN:
+        #         self.dx = 0
+
+        elif event.type == pygame.MOUSEMOTION:
+            r.topleft = event.pos
+
+        elif event.type == pygame.MOUSEBUTTONUP and balls == []:
+            a = [event.pos[0], 500]
+            balls.append(Ball(*a, 1))
+
+        elif balls and event.type == move:
+            for b in balls:
+                b.move(width, height)
+            for b in balls:
+                b.draw()
+            ball = Ball(0,0,0)
+            col1 = ball.move(0, 0)
+            # if col1 == 1:
+            #     balls = []
+
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if n != 10:
+                if event.button == 1:
+                    n += 1
+                    for i in range(3):
+                        for row in all_rects:
+                            for item in row:
+                                rect, color = item
+                                if rect.collidepoint(randint(0, 420), 58 * n):
+                                    if color == BLACK:
+                                        item[1] = (randint(0, 255), randint(0, 255), randint(0, 255))
+        if n == 10:
+            game_over = True
+    screen.fill(pygame.Color("black"))
+
+
+
+    for b in balls:
+        b.draw()
+    screen.blit(arrow, r)
+    for row in all_rects:
+        for item in row:
+            rect, color = item
+            pygame.draw.rect(frame, color, rect)
+    pygame.display.flip()
+message("You lost! Game over.", red)
+pygame.display.update()
+time.sleep(3)
