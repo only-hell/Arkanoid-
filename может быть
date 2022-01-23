@@ -147,10 +147,10 @@ while not game_over:
             rect, color = item
             pygame.draw.rect(sc, color, rect)
     pygame.display.flip()
-    print(r)
+    replaced_text = ((str(r).replace('<rect(', '')).replace(')>', '')).split(", ")
+    x1, y1 = int(replaced_text[0]), int(replaced_text[1])
     background.blit(sc, (x, 0))
-    sc.blit(arrow, (0, 0))
-    # sc.blit(arrow, r)
+    sc.blit(arrow, (x1, y1))
     sc.blit(hero, (x, 0))
     pg.display.update()
     pg.time.delay(30)
