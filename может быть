@@ -1,0 +1,69 @@
+from random import randint
+import pygame as pg
+import sys
+import pygame
+
+
+BLOCK_SIZE = 60
+size = width, height = 420, 600
+
+background = pg.Surface((420, 600))
+background.fill('black')
+xb = 0
+yb = 100
+
+sc = pygame.display.set_mode((width, height))
+pygame.display.set_caption("Появление блоков после каждого хода")
+all_rects = []
+for i in range(0, height, BLOCK_SIZE):
+    row = []
+    for j in range(0, width, BLOCK_SIZE):
+        rect = pygame.Rect(j, i, BLOCK_SIZE - 1, BLOCK_SIZE - 1)
+        row.append([rect, 'black'])
+    all_rects.append(row)
+
+
+
+hero = pg.Surface((100, 100))
+hero.fill('red')
+x = 0
+y = 50
+
+# порядок прорисовки важен!
+background.blit(hero, (x, y))
+sc.blit(background, (0, 0))
+
+pg.display.update()
+
+while 1:
+    for i in pg.event.get():
+        if i.type == pg.QUIT:
+            sys.exit()
+
+
+        elif i.type == pygame.MOUSEBUTTONDOWN:
+                if i.button == 1:
+                    for i in range(3):
+                        for row in all_rects:
+                            for item in row:
+                                rect, color = item
+                                if rect.collidepoint(randint(0, 420), 58 * 1):
+                                    if color == 'black':
+                                        item[1] = (randint(0, 255), randint(0, 255), randint(0, 255))
+
+    if x < 400:
+        x += 2
+    else:
+        x = 0
+    for row in all_rects:
+        for item in row:
+            rect, color = item
+            pygame.draw.rect(sc, color, rect)
+    pygame.display.flip()
+    sc.fill((0, 0, 0))
+    background.fill('blue')
+
+    background.blit(hero, (x, y))
+    sc.blit(background, (xb, yb))
+    pg.display.update()
+    pg.time.delay(30)
