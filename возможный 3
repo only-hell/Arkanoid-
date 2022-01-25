@@ -35,12 +35,17 @@ for i in range(0, height, BLOCK_SIZE):
 
 sc = pygame.display.set_mode((width, height))
 background = pg.Surface((420, 700))
-hero = pg.Surface((100, 100))
-hero.fill('red')
-background.blit(hero, (0, 0))
+
+
+
 sc.blit(background, (0, 0))
 pg.display.update()
 x2 = 0
+
+surf = pygame.Surface((35, 35))
+pygame.draw.circle(surf, 'green', (20, 20), 15)
+sc.blit(surf, (0, 0))
+pygame.display.update()
 
 
 class Ball:
@@ -74,7 +79,7 @@ class Ball:
             self.dx = 0
             self.y = h + 10
             self.x = 300
-            
+
             print(col)
 
     def draw(self):
@@ -104,26 +109,25 @@ while not game_over:
         elif event.type == pygame.MOUSEMOTION:
             r.topleft = event.pos
 
-        elif event.type == pygame.MOUSEBUTTONUP:
+        elif event.type == pygame.MOUSEBUTTONUP and balls == []:
 
             a = [event.pos[0], 500]
             balls.append(Ball(*a, 1))
 
         elif balls and event.type == move:
             for b in balls:
+                print(b)
                 b.move(width, height)
-                print(b.x)
-                print(b.y)
+                if b.y == 590:
+                    balls = []
             for b in balls:
                 b.draw()
 
 
 
 
-        # if col1 == 1:
-        #     balls = []
 
-        elif event.type == pygame.MOUSEBUTTONDOWN:
+        elif event.type == pygame.MOUSEBUTTONDOWN and balls == []:
             if event.button == 1:
                 n += 1
                 for i in range(3):
@@ -153,10 +157,10 @@ while not game_over:
     x1, y1 = int(replaced_text[0]), int(replaced_text[1])
     background.blit(sc, (x2, 0))
     sc.blit(arrow, (x1, y1))
-    
-    sc.blit()
-    
-    sc.blit(hero, (x2, 0))
+
+    # sc.blit(b, (b.x, b.y))
+
+    sc.blit(surf, (x2, 0))
     pg.display.update()
     pg.time.delay(30)
 message("You lost! Game over.", 'red')
