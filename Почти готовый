@@ -12,7 +12,7 @@ balls = []
 col = 0
 pg.init()
 
-pg.mixer.music.load('acdc.mp3')
+pg.mixer.music.load('music.mp3')
 pg.mixer.music.play()
 
 sound1 = pg.mixer.Sound('shoot.mp3')
