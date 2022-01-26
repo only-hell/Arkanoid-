@@ -10,9 +10,16 @@ pygame.font.init()
 font_style = pygame.font.SysFont(None, 50)
 balls = []
 col = 0
+pg.init()
+
+pg.mixer.music.load('acdc.mp3')
+pg.mixer.music.play()
+
+sound1 = pg.mixer.Sound('shoot.mp3')
+sound2 = pg.mixer.Sound('Game over.mp3')
 
 size = width, height = 420, 600
-pygame.display.set_caption("Появление блоков после каждого хода")
+pygame.display.set_caption("Balls and blo")
 all_rects = []
 
 fps = 100
@@ -57,7 +64,6 @@ class Ball:
         # нужно сделать 3 варианта dx = v/ -v/ 0
         # то есть движение вправо влево и  вертикально вверх
 
-
     def move(self, w, h):
         self.x += self.dx
         self.y += self.dy
@@ -77,9 +83,6 @@ class Ball:
             self.dy = 0
             self.dx = 0
             self.y = h + 10
-
-
-
 
     def draw(self):
         pygame.draw.circle(screen, pygame.Color('white'),
@@ -123,7 +126,12 @@ while not game_over:
 
 
 
+
+
+
         elif event.type == pygame.MOUSEBUTTONDOWN and balls == []:
+            if event.button == 1:
+                sound1.play()
             if event.button == 1:
                 n += 1
                 for i in range(3):
@@ -133,15 +141,13 @@ while not game_over:
                             if rect.collidepoint(randint(0, 420), 58 * n):
                                 if color == 'black':
                                     item[1] = (randint(0, 255), randint(0, 255), randint(0, 255))
+
         if n == 10:
+            if event.button == 1:
+                sound2.play()
             game_over = True
-        # if x2 < 400:
-        #     x2 += 0.1
-        # else:
-        #     x2 = 0
+
     screen.fill(pygame.Color("black"))
-
-
 
     for row in all_rects:
         for item in row:
