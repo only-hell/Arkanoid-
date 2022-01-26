@@ -38,8 +38,8 @@ background = pg.Surface((420, 700))
 
 sc.blit(background, (0, 0))
 pg.display.update()
-x2 = 0
-y2 = 0
+x2 = width
+y2 = height
 
 surf = pygame.Surface((35, 35))
 pygame.draw.circle(surf, 'white', (10, 10), 10)
@@ -77,7 +77,7 @@ class Ball:
             self.dy = 0
             self.dx = 0
             self.y = h + 10
-            self.x = 300
+
 
 
 
