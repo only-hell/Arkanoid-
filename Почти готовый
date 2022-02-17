@@ -11,11 +11,15 @@ font_style = pygame.font.SysFont(None, 50)
 balls = []
 col = 0
 pg.init()
+volume = 0.5
+music = True
 
 # вывод музыки
-# причем при music.play  песня будет играть фоном
+# причем при music.play  песня будет играть фоном указанное количество раз
 pg.mixer.music.load('music.mp3')
-pg.mixer.music.play()
+pg.mixer.music.play(99999)
+pg.mixer.music.set_volume(volume)
+# volume отвечает за уровень громкости
 sound1 = pg.mixer.Sound('shoot.mp3')
 sound2 = pg.mixer.Sound('Game over.mp3')
 # размеры игрового поля
@@ -91,7 +95,7 @@ class Ball:
             self.y = h + 10
 
     # def draw(self):
-            #   pygame.draw.circle(screen, pygame.Color('white'),
+    #   pygame.draw.circle(screen, pygame.Color('white'),
     #              (self.x, self.y), 10, 0)
 
 
@@ -142,6 +146,33 @@ while not game_over:
                     balls = []
 
 
+        elif event.type == pg.KEYUP:
+
+            # при нажатии на кнопку 1 музыка ставится либо на паузу либо включается
+            if event.key == pg.K_1:
+                if music == True:
+                    pg.mixer.music.pause()
+                    music = False
+                else:
+                    pg.mixer.music.unpause()
+                    music = True
+            # при нажатии на кнопку 2 громкость увеличивается
+            # а при нажатии на 3 громкость уменьшается
+            elif event.key == pg.K_2 and volume < 1:
+                volume += 0.1
+                pg.mixer.music.set_volume(volume)
+            elif event.key == pg.K_3 and volume > 0:
+                volume -= 0.1
+                pg.mixer.music.set_volume(volume)
+
+
+        elif event.type == pg.MOUSEBUTTONUP:
+            if event.button == 1:
+                sound1.play()
+            elif event.button == 3:
+                sound2.play()
+
+
 
 
 
@@ -183,7 +214,7 @@ while not game_over:
     replaced_text = ((str(r).replace('<rect(', '')).replace(')>', '')).split(", ")
     x1, y1 = int(replaced_text[0]), int(replaced_text[1])
     background.blit(sc, (x2, y2))
-    # наложение стрелки мыши и игрового шара 
+    # наложение стрелки мыши и игрового шара
     # поверх клетчатого поля
     sc.blit(arrow, (x1, y1))
     sc.blit(surf, (x2, y2))
